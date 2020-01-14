@@ -1,7 +1,6 @@
 // Require express
 var express = require("express");
 var app = express();
-var exphbs = require("express-handlebars");
 // require("dotenv").config();
 // process.env.PORT lets the port be set by Heroku
 var PORT = process.env.PORT || 8080;
@@ -13,10 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Routes
-// require("./routes/apiRoutes.js")(app);
-// require("./routes/api-Routes.js")(app);
-// require("./authentication/routes/api-routes.js")(app);
-// require("./authentication/routes/html-routes.js")(app);
+require("./routes/apiRoutes.js")(app);
 
 // Requiring our models for syncing
 var db = require("./models");

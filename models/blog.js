@@ -6,7 +6,15 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                len: [300, 500]
+                len: [3, 500]
+            }
+        },
+
+        blogText: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                len: [3, 500]
             }
         }
     });

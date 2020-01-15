@@ -3,7 +3,7 @@ var express = require("express");
 var app = express();
 // require("dotenv").config();
 // process.env.PORT lets the port be set by Heroku
-var PORT = process.env.PORT || 8080;
+var PORT = process.env.PORT || 3000;
 
 app.use(express.static("public"));
 

@@ -4,7 +4,7 @@ var path = require("path");
 module.exports = function (app) {
 
     app.get("/", function (req, res) {
-        console.log("Inside root riute");
+        console.log("Inside root route");
         res.sendFile(path.join(__dirname + "/../public/home.html"));
     })
 
@@ -36,7 +36,7 @@ module.exports = function (app) {
     })
 
     // Find user corresponding to username and password
-    app.get("/api/:username/:password", function (req, res) {
+    app.get("/api/login/:username/:password", function (req, res) {
 
         db.User.findOne({
             where: {
@@ -55,21 +55,53 @@ module.exports = function (app) {
         res.sendFile(path.join(__dirname, "/../public/blog.html"));
     })
 
-    // Update user table
+    // To Update user table
     app.put("/api/user/update/:id", function (req, res) {
         var id = req.params.id;
         console.log("Inside update function of user table");
         console.log(id);
 
-            db.User.update({
-                hasBlog: 1
-            }, {
+        db.User.update({
+            hasBlog: 1
+        }, {
+            where: {
+                id: id
+            }
+        }).then(function (result) {
+            console.log("Updated user table");
+            res.json(result);
+        })
+    })
+
+    // To View all blogs and bloggers
+    app.get("/api/view/blogs", function (req, res) {
+        console.log("Inside all blogs function server side");
+
+        db.Blog.findAll({
+        }).then(function (result) {
+            res.send(result);
+        })
+
+    })
+
+    // To get the name of the blogger
+    app.get("/api/blogger/name", function (req, res) {
+        console.log("Inside get blogger name function");
+
+        db.Blog.findAll({
+            include: [{
+                model: db.User,
+                attributes: ['userName'],
                 where: {
-                    id: id
+                    userId: db.Sequelize.col('User.id')
                 }
-            }).then(function(result){
-                console.log("Updated user table");
-                res.json(result);
+            }],
+
+        }).then(function (result) {
+            console.log(result);
+            res.json(result);
+        }).catch(function (err) {
+            console.log(err);
         })
-        })
+    })
 }

@@ -35,7 +35,7 @@ $(document).ready(function () {
     })
 
     function getUser(username, password) {
-        $.get("/api/" + username + "/" + password, function (data) {
+        $.get("/api/login/" + username + "/" + password, function (data) {
             console.log(data);
             uniqueUserId = data.id;
             console.log(uniqueUserId);
@@ -72,8 +72,48 @@ $(document).ready(function () {
     })
 
     // View all blogs event
-    $("#view-btn").on("click", function(event){
+    $("#view-btn").on("click", function (event) {
         event.preventDefault();
         console.log("Inside view button");
+
+        $.ajax("/api/view/blogs", {
+            type: "GET"
+        }).then(function (result) {
+            getBloggerName();
+        })
     })
+
+    // Function to get all names of blogger
+    function getBloggerName() {
+
+        $.ajax("/api/blogger/name", {
+            type: "GET"
+        }).then(function (result) {
+            console.log(result);
+            generateList(result);
+        })
+    }
+
+    // Function to show all blogs to DOM
+    function generateList(arr) {
+
+        for (var i = 0; i < arr.length; i++) {
+            var blogContents = $("<div>");
+            blogContents.addClass("jumbotron");
+            var blogTitle = $("<h1>");
+            blogTitle.addClass("display-4");
+            blogTitle.text(arr[i].blogTitle)
+            var hrTag = $("<hr>");
+            hrTag.addClass("my-4");
+            var pTag = $("<p>");
+            pTag.text(arr[i].blogText);
+            var authorTag = $("<small>");
+            authorTag.text(arr[i].User.userName);
+            blogContents.append(blogTitle);
+            blogContents.append(hrTag);
+            blogContents.append(pTag);
+            blogContents.append(authorTag);
+            $("#allBlogs").append(blogContents);
+        }
+    }
 })

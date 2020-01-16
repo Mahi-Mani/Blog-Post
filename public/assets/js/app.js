@@ -114,19 +114,19 @@ $(document).ready(function () {
             comments.attr("id", "comments");
             comments.attr("data-id", arr[i].id);
             if (!currentUser)
-                authorTag.text(arr[i].User.userName);
+                authorTag.text(`By ${arr[i].User.userName}`);
             else {
-                authorTag.text(userName);
+                authorTag.text(`By ${userName}`);
             }
             var addCommentBtn = $("<button>");
             addCommentBtn.attr("type", "submit");
-            addCommentBtn.addClass("btn btn-primary");
+            addCommentBtn.addClass("btn btn-dark");
             addCommentBtn.attr("id", "comment-btn");
             addCommentBtn.attr("data-id", arr[i].id);
             addCommentBtn.text("Add Comment");
             var viewCommentsBtn = $("<button>");
             viewCommentsBtn.attr("type", "submit");
-            viewCommentsBtn.addClass("btn btn-primary");
+            viewCommentsBtn.addClass("btn btn-dark");
             viewCommentsBtn.attr("id", "viewComment-btn");
             viewCommentsBtn.attr("data-id", arr[i].id);
             viewCommentsBtn.text("View all comments");

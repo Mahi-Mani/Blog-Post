@@ -15,26 +15,37 @@
 
 <body>
     <!-- Header -->
-    <header>
-        <nav class="navbar navbar-light bg-light">
-            <span class="navbar-brand mb-0 h1">Blog</span>
+    <div class="pos-f-t">
+        <div class="collapse" id="navbarToggleExternalContent">
+            <div class="bg-dark p-4">
+                <button type="submit" class="btn btn-dark" id="viewMy-btn">View My Blogs</button><br>
+                <button type="submit" class="btn btn-dark" id="view-btn">View All Blogs</button>
+            </div>
+        </div>
+        <nav class="navbar navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-brand mb-0 h1">HEY! WRITE SOMETHING...</span>
+            </button>
         </nav>
-    </header>
+    </div><BR>
     <!-- Text Area -->
-    <h1>Title</h1>
-    <textarea rows="5" cols="50" id="blogTitle">
+    <h1>TITLE</h1>
+    <textarea rows="3" cols="50" id="blogTitle">
 
     </textarea>
     <br>
-    <h3>Contents</h3>
+    <h3>CONTENTS</h3>
     <textarea rows="10" cols="50" id="blogText">
 
     </textarea>
     <br>
     <!-- Submit btn -->
-    <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+    <button type="submit" class="btn btn-dark" id="submit-btn">Submit</button>
     <br><br>
-    <button type="submit" class="btn btn-primary" id="viewMy-btn">View My Blogs</button>
+    <!-- <button type="submit" class="btn btn-primary" id="viewMy-btn">View My Blogs</button> -->
     <br><br><br>
 
     <!-- Comment Box -->
@@ -44,7 +55,7 @@
     <br>
     <!-- <button type="submit" class="btn btn-primary" id="comment-btn">Add a comment</button> -->
     <br><br><br>
-    <button type="submit" class="btn btn-primary" id="view-btn">View All Blogs</button>
+    <!-- <button type="submit" class="btn btn-primary" id="view-btn">View All Blogs</button> -->
     <div id="allBlogs">
     </div>
     <!-- Optional JavaScript -->

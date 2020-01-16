@@ -1,11 +1,12 @@
 $(document).ready(function () {
     // To store the ID of user who is currently logged in
     var userId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+    var userName;
 
     $("#signup-btn").on("click", function (event) {
         event.preventDefault();
         // To get value from user
-        var userName = $("#username").val().trim();
+        userName = $("#username").val().trim();
         var password = $("#password").val().trim();
 
         // New obj creation
@@ -90,12 +91,12 @@ $(document).ready(function () {
             type: "GET"
         }).then(function (result) {
             console.log(result);
-            generateList(result);
+            generateList(result, false);
         })
     }
 
     // Function to show all blogs to DOM
-    function generateList(arr) {
+    function generateList(arr, currentUser) {
 
         for (var i = 0; i < arr.length; i++) {
             var blogContents = $("<div>");
@@ -108,12 +109,34 @@ $(document).ready(function () {
             var pTag = $("<p>");
             pTag.text(arr[i].blogText);
             var authorTag = $("<small>");
-            authorTag.text(arr[i].User.userName);
+            var comments = $("<textarea>");
+            comments.attr("id", "comments");
+            comments.attr("data-id", userId);
+            if (!currentUser)
+                authorTag.text(arr[i].User.userName);
+            else {
+                authorTag.text(userName);
+            }
             blogContents.append(blogTitle);
             blogContents.append(hrTag);
             blogContents.append(pTag);
             blogContents.append(authorTag);
+            blogContents.append(comments);
             $("#allBlogs").append(blogContents);
         }
     }
+
+    // To view blogs I have created
+    $("#viewMy-btn").on("click", function (event) {
+        event.preventDefault();
+        console.log("Inside view my blogs button");
+
+        $.ajax("/api/myblog/" + userId, {
+            type: "GET"
+        }).then(function (result) {
+            console.log(result);
+            generateList(result, true);
+        })
+
+    })
 })

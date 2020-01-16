@@ -104,4 +104,17 @@ module.exports = function (app) {
             console.log(err);
         })
     })
+
+    // To get blogs that I had created
+    app.get("/api/myblog/:id", function(req, res) {
+        console.log("Inside myblog function");
+
+        db.Blog.findAll({
+            where: {
+                UserId: req.params.id
+            }
+        }).then(function (myBlog) {
+            res.json(myBlog);
+        })
+    })
 }

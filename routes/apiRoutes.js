@@ -106,7 +106,7 @@ module.exports = function (app) {
     })
 
     // To get blogs that I had created
-    app.get("/api/myblog/:id", function(req, res) {
+    app.get("/api/myblog/:id", function (req, res) {
         console.log("Inside myblog function");
 
         db.Blog.findAll({
@@ -116,5 +116,19 @@ module.exports = function (app) {
         }).then(function (myBlog) {
             res.json(myBlog);
         })
+    })
+
+    // To post to comments table
+    app.post("/api/new/comment", function (req, res) {
+        db.Comment.create({
+            id: req.body.id,
+            comments: req.body.comments,
+            UserId: req.body.userId,
+            BlogId: req.body.blogId
+        }).then(function (result) {
+            console.log("Inserted into Comments table");
+            res.json(result);
+        })
+
     })
 }

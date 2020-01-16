@@ -97,6 +97,7 @@ $(document).ready(function () {
 
     // Function to show all blogs to DOM
     function generateList(arr, currentUser) {
+        console.log(arr);
 
         for (var i = 0; i < arr.length; i++) {
             var blogContents = $("<div>");
@@ -111,17 +112,24 @@ $(document).ready(function () {
             var authorTag = $("<small>");
             var comments = $("<textarea>");
             comments.attr("id", "comments");
-            comments.attr("data-id", userId);
+            comments.attr("data-id", arr[i].id);
             if (!currentUser)
                 authorTag.text(arr[i].User.userName);
             else {
                 authorTag.text(userName);
             }
+            var addCommentBtn = $("<button>");
+            addCommentBtn.attr("type", "submit");
+            addCommentBtn.addClass("btn btn-primary");
+            addCommentBtn.attr("id", "comment-btn");
+            addCommentBtn.attr("data-id", arr[i].id);
+            addCommentBtn.text("Add Comment");
             blogContents.append(blogTitle);
             blogContents.append(hrTag);
             blogContents.append(pTag);
             blogContents.append(authorTag);
             blogContents.append(comments);
+            blogContents.append(addCommentBtn);
             $("#allBlogs").append(blogContents);
         }
     }
@@ -136,6 +144,28 @@ $(document).ready(function () {
         }).then(function (result) {
             console.log(result);
             generateList(result, true);
+        })
+
+    })
+
+    // To post a comment
+    $(document).on("click", "#comment-btn", function(event){
+        event.preventDefault();
+        var commentId = $(this).data("id");
+        console.log(`Comment ID ${commentId}`);
+        var comments = $("textarea[data-id=" + commentId + "]").val();
+        var newComment = {
+            comments: comments,
+            userId: userId,
+            blogId: commentId
+        }
+        
+        // Post to comments table
+        $.ajax("/api/new/comment", {
+            type: "POST",
+            data: newComment
+        }).then(function(){
+            console.log("Posted to comment table");
         })
 
     })

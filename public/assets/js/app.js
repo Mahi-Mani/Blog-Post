@@ -2,6 +2,7 @@ $(document).ready(function () {
     // To store the ID of user who is currently logged in
     var userId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
     var userName;
+    var blogContents;
 
     $("#signup-btn").on("click", function (event) {
         event.preventDefault();
@@ -100,7 +101,7 @@ $(document).ready(function () {
         console.log(arr);
 
         for (var i = 0; i < arr.length; i++) {
-            var blogContents = $("<div>");
+            blogContents = $("<div>");
             blogContents.addClass("jumbotron");
             var blogTitle = $("<h1>");
             blogTitle.addClass("display-4");
@@ -118,6 +119,8 @@ $(document).ready(function () {
             else {
                 authorTag.text(`By ${userName}`);
             }
+            var commentSection = $("<div>");
+            commentSection.attr("data-id", arr[i].id);
             var addCommentBtn = $("<button>");
             addCommentBtn.attr("type", "submit");
             addCommentBtn.addClass("btn btn-dark");
@@ -135,6 +138,7 @@ $(document).ready(function () {
             blogContents.append(pTag);
             blogContents.append(authorTag);
             blogContents.append(comments);
+            blogContents.append(commentSection);
             blogContents.append(addCommentBtn);
             blogContents.append(viewCommentsBtn);
             $("#allBlogs").append(blogContents);
@@ -189,12 +193,13 @@ $(document).ready(function () {
         $.ajax("/api/comments/" + blogId, {
             type: "GET"
         }).then(function (results) {
-            displayComments(results);
+            displayComments(results, blogId);
         })
     }
 
     // Function to display comments
-    function displayComments(arr) {
+    function displayComments(arr, id) {
+        $("div[data-id=" + id + "]").empty();
         console.log(arr);
         var ulTag = $("<ul>");
         ulTag.addClass("list-group");
@@ -212,7 +217,8 @@ $(document).ready(function () {
                 pTag.text(`${comments} Commented By: ${username}`);
                 liTag.append(pTag);
                 ulTag.append(liTag);
-                $("#allBlogs").append(ulTag);
+                // $("#comment-section").append(ulTag);
+                $("div[data-id=" + id + "]").append(ulTag);
             })
         }
     }

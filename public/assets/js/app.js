@@ -71,6 +71,7 @@ $(document).ready(function () {
                 console.log("Updated value to user table")
             })
         })
+        location.reload();
     })
 
     // View all blogs event
@@ -98,27 +99,24 @@ $(document).ready(function () {
 
     // Function to show all blogs to DOM
     function generateList(arr, currentUser) {
-        console.log(arr);
 
+        $("#allBlogs").empty();
         for (var i = 0; i < arr.length; i++) {
             blogContents = $("<div>");
             blogContents.addClass("jumbotron");
             var blogTitle = $("<h1>");
             blogTitle.addClass("display-4");
-            blogTitle.text(arr[i].blogTitle)
+            if (currentUser)
+                blogTitle.text(`${arr[i].blogTitle}`)
+            else
+                blogTitle.text(`${arr[i].blogTitle} by ${arr[i].User.userName}`)
             var hrTag = $("<hr>");
             hrTag.addClass("my-4");
             var pTag = $("<p>");
             pTag.text(arr[i].blogText);
-            var authorTag = $("<small>");
             var comments = $("<textarea>");
             comments.attr("id", "comments");
             comments.attr("data-id", arr[i].id);
-            if (!currentUser)
-                authorTag.text(`By ${arr[i].User.userName}`);
-            else {
-                authorTag.text(`By ${userName}`);
-            }
             var commentSection = $("<div>");
             commentSection.attr("data-id", arr[i].id);
             var addCommentBtn = $("<button>");
@@ -133,14 +131,22 @@ $(document).ready(function () {
             viewCommentsBtn.attr("id", "viewComment-btn");
             viewCommentsBtn.attr("data-id", arr[i].id);
             viewCommentsBtn.text("View all comments");
+            var deleteBtn = $("<button>");
+            deleteBtn.attr("type", "submit");
+            deleteBtn.addClass("btn btn-danger");
+            deleteBtn.attr("id", "delete-btn");
+            deleteBtn.attr("data-id", arr[i].id);
+            deleteBtn.text("Delete");
             blogContents.append(blogTitle);
             blogContents.append(hrTag);
             blogContents.append(pTag);
-            blogContents.append(authorTag);
+            // blogContents.append(authorTag);
             blogContents.append(comments);
             blogContents.append(commentSection);
             blogContents.append(addCommentBtn);
             blogContents.append(viewCommentsBtn);
+            if (currentUser)
+                blogContents.append(deleteBtn);
             $("#allBlogs").append(blogContents);
         }
     }
@@ -178,6 +184,8 @@ $(document).ready(function () {
         }).then(function () {
             console.log("Posted to comment table");
         })
+        // To clear the value out
+        $("textarea[data-id=" + commentId + "]").val("");
     })
 
     //  To view all comments
@@ -213,15 +221,37 @@ $(document).ready(function () {
                 console.log(username);
                 var liTag = $("<li>");
                 liTag.addClass("list-group-item");
-                var pTag = $("<p>");
-                pTag.text(`${comments} Commented By: ${username}`);
-                liTag.append(pTag);
+                var p1Tag = $("<p>");
+                p1Tag.text(`${comments}`);
+                var p2Tag = $("<p>");
+                p2Tag.text(`Commented By: ${username}`);
+                liTag.append(p1Tag);
+                liTag.append(p2Tag);
+                var deleteBtn = $("<button>");
+                deleteBtn.attr("type", "submit");
+                deleteBtn.addClass("btn btn-danger");
+                deleteBtn.attr("id", "delete-btn");
+                // deleteBtn.attr("data-id", arr[i].id);
+                deleteBtn.text("Delete");
+                liTag.append(deleteBtn);
                 ulTag.append(liTag);
-                // $("#comment-section").append(ulTag);
                 $("div[data-id=" + id + "]").append(ulTag);
             })
         }
     }
+
+    // To delete a blog
+    $(document).on("click", "#delete-btn", function (event) {
+        event.preventDefault();
+        var id = $(this).data("id");
+        console.log(id);
+
+        $.ajax("/api/blog/delete/" + id, {
+            type: "PUT"
+        }).then(function(){
+            console.log("Deleted");
+        })
+    })
 
     // Function tp get the name of users who commented
     // function getUsername(id) {

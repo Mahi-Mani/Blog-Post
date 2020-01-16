@@ -156,4 +156,17 @@ module.exports = function (app) {
         })
     })
 
+    // To delete a blog
+    app.put("/api/blog/delete/:id", function (req, res) {
+        var id = req.params.id;
+
+        db.Blog.destroy({
+            where: {
+                id: id
+            }
+        }).then(function (result) {
+            res.json(result);
+        })
+    })
+
 }

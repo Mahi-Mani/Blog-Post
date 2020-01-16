@@ -105,6 +105,19 @@ module.exports = function (app) {
         })
     })
 
+    // To get the name of user who had commented
+    app.get("/api/comment/name/:id", function (req, res) {
+
+        db.User.findOne({
+            where: {
+                id: req.params.id
+            }
+        }).then(function (dbUser) {
+            console.log(dbUser);
+            res.json(dbUser);
+        })
+    })
+
     // To get blogs that I had created
     app.get("/api/myblog/:id", function (req, res) {
         console.log("Inside myblog function");
@@ -129,6 +142,18 @@ module.exports = function (app) {
             console.log("Inserted into Comments table");
             res.json(result);
         })
-
     })
+
+    // To retrive comments based on blog ID
+    app.get("/api/comments/:blogId", function (req, res) {
+
+        db.Comment.findAll({
+            where: {
+                BlogId: req.params.blogId
+            }
+        }).then(function (comments) {
+            res.json(comments);
+        })
+    })
+
 }

@@ -124,12 +124,19 @@ $(document).ready(function () {
             addCommentBtn.attr("id", "comment-btn");
             addCommentBtn.attr("data-id", arr[i].id);
             addCommentBtn.text("Add Comment");
+            var viewCommentsBtn = $("<button>");
+            viewCommentsBtn.attr("type", "submit");
+            viewCommentsBtn.addClass("btn btn-primary");
+            viewCommentsBtn.attr("id", "viewComment-btn");
+            viewCommentsBtn.attr("data-id", arr[i].id);
+            viewCommentsBtn.text("View all comments");
             blogContents.append(blogTitle);
             blogContents.append(hrTag);
             blogContents.append(pTag);
             blogContents.append(authorTag);
             blogContents.append(comments);
             blogContents.append(addCommentBtn);
+            blogContents.append(viewCommentsBtn);
             $("#allBlogs").append(blogContents);
         }
     }
@@ -149,7 +156,7 @@ $(document).ready(function () {
     })
 
     // To post a comment
-    $(document).on("click", "#comment-btn", function(event){
+    $(document).on("click", "#comment-btn", function (event) {
         event.preventDefault();
         var commentId = $(this).data("id");
         console.log(`Comment ID ${commentId}`);
@@ -159,14 +166,67 @@ $(document).ready(function () {
             userId: userId,
             blogId: commentId
         }
-        
+
         // Post to comments table
         $.ajax("/api/new/comment", {
             type: "POST",
             data: newComment
-        }).then(function(){
+        }).then(function () {
             console.log("Posted to comment table");
         })
-
     })
+
+    //  To view all comments
+    $(document).on("click", "#viewComment-btn", function (event) {
+        event.preventDefault();
+        var commentId = $(this).data("id");
+        console.log(`Comment ID : ${commentId}`);
+        getComments(commentId);
+    })
+
+    // Function to get comments for a particular blog
+    function getComments(blogId) {
+        $.ajax("/api/comments/" + blogId, {
+            type: "GET"
+        }).then(function (results) {
+            displayComments(results);
+        })
+    }
+
+    // Function to display comments
+    function displayComments(arr) {
+        console.log(arr);
+        var ulTag = $("<ul>");
+        ulTag.addClass("list-group");
+        for (var i = 0; i < arr.length; i++) {
+            var comments = arr[i].comments;
+
+            $.ajax("/api/comment/name/" + arr[i].UserId, {
+                type: "GET"
+            }).then(function (result) {
+                username = result.userName;
+                console.log(username);
+                var liTag = $("<li>");
+                liTag.addClass("list-group-item");
+                var pTag = $("<p>");
+                pTag.text(`${comments} Commented By: ${username}`);
+                liTag.append(pTag);
+                ulTag.append(liTag);
+                $("#allBlogs").append(ulTag);
+            })
+        }
+    }
+
+    // Function tp get the name of users who commented
+    // function getUsername(id) {
+    //     var username;
+
+    //     $.ajax("/api/comment/name/" + id, {
+    //         type: "GET"
+    //     }).then(function (result) {
+    //         username = result.userName;
+    //     })
+    //     console.log(username);
+    //     return username;
+    // }
 })

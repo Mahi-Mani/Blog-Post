@@ -106,7 +106,7 @@ module.exports = function (app) {
     })
 
     // To get the name of user who had commented
-    app.get("/api/comment/name/:id", function (req, res) {
+    app.get("/api/comment/name/:id/:comments", function (req, res) {
 
         db.User.findOne({
             where: {
@@ -114,11 +114,15 @@ module.exports = function (app) {
             }
         }).then(function (dbUser) {
             console.log(dbUser);
-            res.json(dbUser);
+            var result = {
+                dbUser: dbUser,
+                comments: req.params.comments
+            }
+            res.json(result);
         })
     })
 
-    // To get blogs that I had created
+    // To get blogs that I have created
     app.get("/api/myblog/:id", function (req, res) {
         console.log("Inside myblog function");
 
@@ -169,4 +173,32 @@ module.exports = function (app) {
         })
     })
 
+    // To delete a comment
+    app.put("/api/comment/delete/:id", function(req, res){
+        var id = req.params.id;
+
+        db.Comment.destroy({
+            where: {
+                id: id
+            }
+        }).then(function(result){
+            res.json(result);
+        })
+    })
+
+    // To update a blog
+    app.put("/api/blog/update/:id", function (req, res) {
+        var id = req.params.id;
+
+        db.Blog.update({
+            blogText: req.body.contents
+        }, {
+            where: {
+                id: id
+            }
+        }).then(function () {
+            console.log("Updated blog table");
+            res.json("Updated");
+        })
+    })
 }

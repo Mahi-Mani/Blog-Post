@@ -238,7 +238,7 @@ $(document).ready(function () {
             var comments = arr[i].comments;
             var commentId = arr[i].id;
 
-            $.ajax("/api/comment/name/" + arr[i].UserId + "/" + comments, {
+            $.ajax("/api/comment/name/" + arr[i].userId + "/" + comments, {
                 type: "GET"
             }).then(function (result) {
                 console.log(result);
@@ -300,15 +300,6 @@ $(document).ready(function () {
 
         location.reload();
     })
-
-    // To show edit box
-    // $(document).on("click", "#edit-btn", function (event) {
-    //     event.preventDefault();
-    //     var id = $(this).data("id");
-    //     console.log(id);
-    //     $("textarea#edit-section").removeClass("d-none");
-    //     $("button#submit-edit-btn").removeClass("d-none");
-    // })
 
     // To update blog table with new edited post
     $(document).on("click", "#submit-edit-btn", function (event) {

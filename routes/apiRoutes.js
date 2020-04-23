@@ -140,11 +140,13 @@ module.exports = function (app) {
         db.Comment.create({
             id: req.body.id,
             comments: req.body.comments,
-            UserId: req.body.userId,
+            userId: req.body.userId,
             BlogId: req.body.blogId
         }).then(function (result) {
             console.log("Inserted into Comments table");
             res.json(result);
+        }).catch(function (err) {
+            console.log(err);
         })
     })
 
@@ -174,14 +176,14 @@ module.exports = function (app) {
     })
 
     // To delete a comment
-    app.put("/api/comment/delete/:id", function(req, res){
+    app.put("/api/comment/delete/:id", function (req, res) {
         var id = req.params.id;
 
         db.Comment.destroy({
             where: {
                 id: id
             }
-        }).then(function(result){
+        }).then(function (result) {
             res.json(result);
         })
     })

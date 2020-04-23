@@ -1,4 +1,4 @@
-// Export borewell model
+// Export Comment model
 module.exports = function (sequelize, DataTypes) {
     var Comment = sequelize.define("Comment", {
 
@@ -9,8 +9,17 @@ module.exports = function (sequelize, DataTypes) {
         },
         comments: {
             type: DataTypes.STRING
+        },
+        userId: {
+            type: DataTypes.INTEGER
         }
     });
+
+    Comment.associate = function(models) {
+        models.Comment.belongsTo(models.Blog, {
+            onDelete: "CASCADE"
+        });
+    }
 
     return Comment;
 }

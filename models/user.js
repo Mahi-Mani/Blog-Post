@@ -1,4 +1,4 @@
-// Export borewell model
+// Export User model
 module.exports = function (sequelize, DataTypes) {
     var User = sequelize.define("User", {
 
@@ -20,13 +20,10 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     User.associate = function (models) {
-
-        User.belongsToMany(models.Blog, {
-            through: {
-                model: models.Comment
-            }
+        models.User.hasMany(models.Blog, {
+            onDelete: 'CASCADE', hooks: true
         });
-    }
+    };
 
     return User;
 }
